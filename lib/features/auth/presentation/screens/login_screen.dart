@@ -67,10 +67,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Marca
-                Icon(Icons.sports_soccer, size: 64, color: AppColors.primary)
+                Image.asset(
+                  'assets/icon/icon_foreground.png',
+                  width: 110,
+                  height: 110,
+                )
                     .animate()
                     .fadeIn(duration: 500.ms)
-                    .slideY(begin: -0.3, curve: Curves.easeOutCubic),
+                    .slideY(begin: -0.3, curve: Curves.easeOutCubic)
+                    .then()
+                    .shimmer(
+                      duration: 1400.ms,
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                    ),
                 const SizedBox(height: 16),
                 Text(
                   'Mundial Polla',

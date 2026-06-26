@@ -8,8 +8,11 @@ abstract final class AppConfig {
     defaultValue: 'http://10.0.2.2:8000',
   );
 
-  static const String wsLiveUrl = String.fromEnvironment(
-    'WS_LIVE_URL',
-    defaultValue: 'ws://10.0.2.2:8000/ws/live',
-  );
+  static const String _wsOverride = String.fromEnvironment('WS_LIVE_URL');
+
+  /// URL del WebSocket en vivo. Si no se define `WS_LIVE_URL`, se deriva de
+  /// [apiBaseUrl] (`http` → `ws`, `https` → `wss`) + `/ws/live`.
+  static String get wsLiveUrl => _wsOverride.isNotEmpty
+      ? _wsOverride
+      : '${apiBaseUrl.replaceFirst('http', 'ws')}/ws/live';
 }

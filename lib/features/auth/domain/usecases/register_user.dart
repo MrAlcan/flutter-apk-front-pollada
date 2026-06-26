@@ -6,6 +6,14 @@ class RegisterUser {
 
   final AuthRepository _repository;
 
-  Future<User> call({required String email, required String password}) =>
-      _repository.register(email: email, password: password);
+  Future<User> call({
+    required String email,
+    required String password,
+    String? displayName,
+  }) =>
+      _repository.register(
+        email: email,
+        password: password,
+        displayName: displayName,
+      );
 }

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pollada/features/live/domain/entities/leaderboard_entry.dart';
-import 'package:pollada/features/live/presentation/widgets/leaderboard_list.dart';
+import 'package:pollada/features/pools/domain/entities/leaderboard_entry.dart';
+import 'package:pollada/features/pools/presentation/widgets/leaderboard_list.dart';
 
 LeaderboardEntry _entry(int rank, int userId, String name, int points) =>
     LeaderboardEntry(
       rank: rank,
       userId: userId,
-      email: '$name@polla.com',
+      displayName: name,
       totalPoints: points,
       exactHits: 0,
       outcomeHits: 0,
+      daysPlayed: 1,
     );
 
 Widget _wrap(List<LeaderboardEntry> entries) => MaterialApp(

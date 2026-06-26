@@ -6,7 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/live/presentation/screens/dashboard_shell.dart';
+import '../../features/pools/presentation/screens/dashboard_shell.dart';
+import '../../features/pools/presentation/screens/day_detail_screen.dart';
+import '../../features/pools/presentation/screens/participation_screen.dart';
 import '../theme/app_colors.dart';
 
 /// Pantalla de carga mientras se restaura la sesión guardada.
@@ -19,19 +21,19 @@ class SplashScreen extends StatelessWidget {
       body: DecoratedBox(
         decoration: const BoxDecoration(gradient: AppColors.stadiumGradient),
         child: Center(
-          child: const Icon(
-            Icons.sports_soccer,
-            size: 72,
-            color: AppColors.primary,
+          child: Image.asset(
+            'assets/icon/icon_foreground.png',
+            width: 160,
+            height: 160,
           )
               .animate(onPlay: (c) => c.repeat(reverse: true))
               .scale(
                 duration: 700.ms,
                 begin: const Offset(1, 1),
-                end: const Offset(1.15, 1.15),
+                end: const Offset(1.12, 1.12),
                 curve: Curves.easeInOut,
               )
-              .fade(begin: 0.6, end: 1),
+              .fade(begin: 0.7, end: 1),
         ),
       ),
     );
@@ -107,6 +109,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/',
         pageBuilder: (context, state) =>
             _fadeSlidePage(state, const DashboardShell()),
+      ),
+      GoRoute(
+        path: '/day/:day',
+        pageBuilder: (context, state) => _fadeSlidePage(
+          state,
+          DayDetailScreen(day: state.pathParameters['day']!),
+        ),
+      ),
+      GoRoute(
+        path: '/participate/:day',
+        pageBuilder: (context, state) => _fadeSlidePage(
+          state,
+          ParticipationScreen(day: state.pathParameters['day']!),
+        ),
       ),
     ],
   );

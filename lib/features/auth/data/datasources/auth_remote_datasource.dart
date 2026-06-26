@@ -8,10 +8,19 @@ class AuthRemoteDataSource {
 
   final Dio _dio;
 
-  Future<UserModel> register(String email, String password) async {
+  Future<UserModel> register(
+    String email,
+    String password, [
+    String? displayName,
+  ]) async {
     final response = await _dio.post<Map<String, dynamic>>(
       '/auth/register',
-      data: {'email': email, 'password': password},
+      data: {
+        'email': email,
+        'password': password,
+        if (displayName != null && displayName.isNotEmpty)
+          'display_name': displayName,
+      },
     );
     return UserModel.fromJson(response.data!);
   }

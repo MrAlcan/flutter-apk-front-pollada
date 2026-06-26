@@ -36,8 +36,10 @@ class AuthController extends AsyncNotifier<User?> {
   Future<bool> login(String email, String password) =>
       _run(() => ref.read(loginUserProvider)(email: email, password: password));
 
-  Future<bool> register(String email, String password) => _run(
-      () => ref.read(registerUserProvider)(email: email, password: password));
+  Future<bool> register(String email, String password,
+          {String? displayName}) =>
+      _run(() => ref.read(registerUserProvider)(
+          email: email, password: password, displayName: displayName));
 
   Future<void> logout() async {
     await ref.read(authRepositoryProvider).logout();

@@ -3,7 +3,12 @@ import '../entities/user.dart';
 /// Contrato del repositorio de autenticación (la capa de datos lo implementa).
 abstract interface class AuthRepository {
   /// Registra al usuario y deja la sesión iniciada (token guardado).
-  Future<User> register({required String email, required String password});
+  /// [displayName] es opcional: el backend usa lo previo a la `@` si falta.
+  Future<User> register({
+    required String email,
+    required String password,
+    String? displayName,
+  });
 
   /// Inicia sesión y persiste el token JWT de forma segura.
   Future<User> login({required String email, required String password});

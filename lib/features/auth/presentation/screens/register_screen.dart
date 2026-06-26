@@ -18,6 +18,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegisterScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
@@ -29,6 +30,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   @override
   void dispose() {
     _shakeController.dispose();
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
@@ -43,6 +45,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     final ok = await ref.read(authControllerProvider.notifier).register(
           _emailController.text.trim(),
           _passwordController.text,
+          displayName: _nameController.text.trim(),
         );
     if (!ok && mounted) {
       _shakeController.forward(from: 0);
@@ -92,6 +95,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      AuthTextField(
+                        controller: _nameController,
+                        label: 'Nombre visible (opcional)',
+                        icon: Icons.badge_outlined,
+                        keyboardType: TextInputType.name,
+                      ),
+                      const SizedBox(height: 16),
                       AuthTextField(
                         controller: _emailController,
                         label: 'Email',

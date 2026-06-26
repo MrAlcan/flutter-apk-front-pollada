@@ -1,9 +1,15 @@
 # Mundial Polla — Frontend (Flutter / Android)
 
-App móvil de la quiniela: login/registro con JWT, lobby de partidos con
-marcadores en vivo, pronósticos vía bottom-sheet y tabla de clasificación que
-se reordena con animaciones en tiempo real (WebSocket con reconexión
-automática). Stack: **Flutter · Riverpod · dio · go_router · flutter_animate**.
+App móvil de la polla mundialista por jornadas: cada día con partidos se abre
+una jornada; para participar hay que pronosticar **todos** los partidos del
+día antes del cierre (1 minuto antes del primer partido). Los pronósticos son
+inmutables y privados hasta que termina el último partido del día; entonces se
+revelan los de todos los participantes y los ganadores de la jornada. Acertar
+el resultado general suma 1 punto y el marcador exacto 3 (configurables en el
+backend). El usuario administrador carga los resultados desde la propia app
+—no se consume ninguna API externa— y, en fase de grupos, los clasificados a
+las fases siguientes se calculan automáticamente.
+Stack: **Flutter · Riverpod · dio · go_router · flutter_animate**.
 
 ## Inicializar el repositorio
 
@@ -33,9 +39,7 @@ flutter run
   local; pasa la IP de tu PC:
 
 ```bash
-flutter run \
-  --dart-define=API_BASE_URL=http://<IP-de-tu-PC>:8000 \
-  --dart-define=WS_LIVE_URL=ws://<IP-de-tu-PC>:8000/ws/live
+flutter run --dart-define=API_BASE_URL=http://<IP-de-tu-PC>:8000
 ```
 
 > En Windows + WSL2, usa la IP LAN de Windows (`ipconfig` → IPv4) y asegúrate
@@ -46,8 +50,7 @@ flutter run \
 
 ```bash
 flutter build apk --release \
-  --dart-define=API_BASE_URL=http://<IP-de-tu-PC>:8000 \
-  --dart-define=WS_LIVE_URL=ws://<IP-de-tu-PC>:8000/ws/live
+  --dart-define=API_BASE_URL=http://<IP-de-tu-PC>:8000
 ```
 
 El APK queda en `build/app/outputs/flutter-apk/app-release.apk`. Cópialo al
@@ -69,19 +72,21 @@ Notas:
 ```bash
 flutter analyze   # linting estático
 flutter test      # widget tests (login + leaderboard animado)
-dart run tool/ws_probe.dart 30   # sonda del WebSocket contra el backend local
 ```
 
 ## Arquitectura
 
 ```
 lib/
-├── core/                  # config (URLs por --dart-define), tema, dio+JWT,
-│   └── ...                # almacenamiento seguro, router con redirect por sesión
+├── core/                  # config (URL por --dart-define), tema, dio+JWT,
+│   └── ...                # almacenamiento seguro, router, utilidades de fecha
 └── features/
-    ├── auth/              # login/registro: domain ⇆ data ⇆ presentation
-    └── live/              # partidos, pronósticos y tabla en tiempo real
-        ├── domain/        # entidades y contrato LiveRepository
-        ├── data/          # REST (dio) + WebSocket con backoff exponencial
-        └── presentation/  # lobby, leaderboard animado, bottom-sheet, Riverpod
+    ├── auth/              # login/registro (JWT) con bandera is_admin
+    ├── pools/             # jornadas diarias de apuestas
+    │   ├── domain/        # jornada, partido, pronóstico, reveal, tabla
+    │   ├── data/          # REST (dio): días, participación, reveal, tabla
+    │   └── presentation/  # Hoy, Historial, detalle de jornada,
+    │                      # formulario sellado de pronósticos, clasificación
+    └── admin/             # panel del administrador: carga de resultados
+                           # (fase de grupos recalcula clasificados en backend)
 ```

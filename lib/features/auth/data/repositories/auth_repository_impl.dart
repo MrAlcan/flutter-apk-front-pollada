@@ -15,9 +15,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<User> register({
     required String email,
     required String password,
+    String? displayName,
   }) async {
     try {
-      await _remote.register(email, password);
+      await _remote.register(email, password, displayName);
       // Tras el registro, inicia sesión para obtener y guardar el token.
       return await login(email: email, password: password);
     } on DioException catch (e) {

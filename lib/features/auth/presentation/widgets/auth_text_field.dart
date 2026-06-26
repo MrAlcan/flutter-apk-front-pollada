@@ -11,7 +11,7 @@ class AuthTextField extends StatefulWidget {
     required this.controller,
     required this.label,
     required this.icon,
-    required this.validator,
+    this.validator = _noValidation,
     this.obscure = false,
     this.keyboardType,
     this.textInputAction = TextInputAction.next,
@@ -26,6 +26,8 @@ class AuthTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextInputAction textInputAction;
   final void Function(String)? onSubmitted;
+
+  static String? _noValidation(String? _) => null;
 
   @override
   State<AuthTextField> createState() => _AuthTextFieldState();
